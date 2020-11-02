@@ -1,2 +1,2 @@
-# Prediction-using-Supervised-ML
-Task-1 of The Sparks Foundation Internship
+# The Sparks Foundation
+The list of works submitted for the internship
