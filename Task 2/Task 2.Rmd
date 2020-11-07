@@ -1,0 +1,98 @@
+---
+title: "TASK-2"
+author: "Ankur Kumar Singh"
+date: "06/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# LOADING AND PREPROCESSING THE DATASET
+
+```{r}
+setwd("D:/rrrrr")
+data <- read.csv("iris.csv")
+data_species <- data[,"Species"] # Taking Species
+data_value <- data[,c(2,3,4,5)] # Taking Values
+head(data_value,5)
+
+```
+# GENERAL DESCRIPTION OF DATA
+
+```{r}
+summary(data)
+```
+
+# LOADING PACKAGES
+
+```{r}
+library(factoextra) # Visualizing the clusters
+library(NbClust) # Running estimation for optimal number of clusters
+library(heatmaply) # Used for normalizing the data
+
+```
+# NORMALIZING THE DATA
+
+```{r}
+
+data_value <- normalize(data_value) # Running min-max scaling 
+```
+
+# ESTIMATING OPTIMAL NUMBER OF CLUSTERS
+
+```{r}
+
+fviz_nbclust(data_value, kmeans, nstart = 25,  method = "gap_stat", nboot = 50)+
+  labs(subtitle = "Gap statistic method")
+# GAP STATISTIC IS PREFFERED BECAUSE IT PROVIDES WELL DEFINED STATISTICAL PROCEDURE TO ESTIMATE THE OPTIMAL NUMBER OF CLUSTERS
+```
+
+# RUNNING KMEANS ALGORITHM
+
+```{r}
+set.seed(123)
+km.res <- kmeans(data_value,3,nstart = 10)
+```
+
+# MODEL RESULTS
+```{r}
+km.res
+```
+
+
+# VISUALIZING THE CLUSTERS
+```{r}
+fviz_cluster(km.res, data_value, ellipse.type = "norm", geom = "text") 
+
+```
+
+# GENERATING TABLE
+
+```{r}
+table(km.res$cluster,data_species)
+```
+
+# TABLE RESULTS
+
+```{r}
+# FROM TABLE
+# ROW 1 <- SETOSA
+# ROW 2 <- VIRGINICA
+# ROW 3 <- VERISCOLOR
+c_classified = sum(50,47,36)
+i_classified = sum(3,14)
+accuracy = 133/sum(c_classified,i_classified)
+values <- data.frame("Classified COrrectly"=c_classified,"Classified Incorrectly"=i_classified ,"Accuracy(%)"=accuracy)
+values
+
+
+```
+
+# CONCLUSION
+
+1. Clusters with size 50,39 and 61 are created successfully
+2. From Gap-statistic method optimum number of cluster was found
+3. WSS(Within Sum of Square) accuracy is 83%
+4. 133 instances are calssified correctly while 17 of them are classified incorrectly with an accuracy 88.6%
